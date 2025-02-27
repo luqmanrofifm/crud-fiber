@@ -3,6 +3,7 @@ package apps
 import (
 	"crud_fiber.com/m/config"
 	"crud_fiber.com/m/config/database"
+	"crud_fiber.com/m/middleware"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -23,6 +24,8 @@ func StartApps() {
 		}
 		return c.Next()
 	})
+
+	app.Use(middleware.CustomRecoverMiddleware)
 
 	config.LoadEnv()
 	database.InitializeDatabase()
