@@ -34,3 +34,15 @@ func (handler *BookHandler) CreateBook(c *fiber.Ctx) error {
 
 	return utils.SuccessResponse(c, "Book created successfully")
 }
+
+func (handler *BookHandler) GetBooks(c *fiber.Ctx) error {
+	page := c.QueryInt("page", 1)
+	limit := c.QueryInt("limit", 10)
+
+	books, err := handler.BookService.GetListPaginationBooks(page, limit)
+	if err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	return utils.SuccessResponse(c, books)
+}

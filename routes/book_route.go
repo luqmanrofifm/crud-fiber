@@ -14,4 +14,5 @@ func (route *BookRoute) SetupBookRoute() {
 	bookRoute := route.App.Group("/api/v1/book")
 
 	bookRoute.Post("/create", route.BookHandler.CreateBook)
+	bookRoute.Get("/list", route.BookHandler.GetBooks)
 }

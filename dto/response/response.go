@@ -12,4 +12,12 @@ type (
 		Message    string `json:"message"`
 		Error      string `json:"error,omitempty"`
 	}
+
+	PageListData struct {
+		PageSize    int         `json:"page_size"`
+		CurrentPage int         `json:"current_page"`
+		TotalPage   int64       `json:"total_page"`
+		TotalRecord int64       `json:"total_record"`
+		Data        interface{} `json:"data"`
+	}
 )
