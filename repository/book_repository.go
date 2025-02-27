@@ -2,6 +2,7 @@ package repository
 
 import (
 	"crud_fiber.com/m/entity"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -37,4 +38,13 @@ func (r *BookRepository) FindAllPagination(page int, limit int) ([]entity.Book, 
 	}
 
 	return books, total, nil
+}
+
+func (r *BookRepository) FindByID(id uuid.UUID) (*entity.Book, error) {
+	var book entity.Book
+	err := r.db.Where("id = ?", id).First(&book).Error
+	if err != nil {
+		return nil, err
+	}
+	return &book, nil
 }

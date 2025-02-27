@@ -6,6 +6,7 @@ import (
 	"crud_fiber.com/m/service"
 	"crud_fiber.com/m/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type BookHandler struct {
@@ -45,4 +46,20 @@ func (handler *BookHandler) GetBooks(c *fiber.Ctx) error {
 	}
 
 	return utils.SuccessResponse(c, books)
+}
+
+func (handler *BookHandler) GetDetailBook(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+
+	id, errParse := uuid.Parse(idStr)
+	if errParse != nil {
+		return utils.ErrorResponse(c, errParse)
+	}
+
+	book, err := handler.BookService.GetDetailBook(id)
+	if err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	return utils.SuccessResponse(c, book)
 }

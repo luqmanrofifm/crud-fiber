@@ -5,6 +5,7 @@ import (
 	"crud_fiber.com/m/dto/response"
 	"crud_fiber.com/m/entity"
 	"crud_fiber.com/m/repository"
+	"github.com/google/uuid"
 )
 
 type BookService struct {
@@ -45,4 +46,13 @@ func (service *BookService) GetListPaginationBooks(page int, limit int) (*respon
 		TotalRecord: totalData,
 		Data:        books,
 	}, nil
+}
+
+func (service *BookService) GetDetailBook(id uuid.UUID) (*entity.Book, error) {
+	book, err := service.BookRepository.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return book, nil
 }
