@@ -56,3 +56,11 @@ func (r *BookRepository) Update(book *entity.Book) (*entity.Book, error) {
 	}
 	return book, nil
 }
+
+func (r *BookRepository) Delete(id uuid.UUID) error {
+	err := r.db.Where("id = ?", id).Delete(&entity.Book{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

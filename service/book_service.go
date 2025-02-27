@@ -74,3 +74,12 @@ func (service *BookService) UpdateBook(id uuid.UUID, dto request.UpdateBookDto) 
 
 	return updatedBook, nil
 }
+
+func (service *BookService) DeleteBook(id uuid.UUID) (bool, error) {
+	err := service.BookRepository.Delete(id)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}

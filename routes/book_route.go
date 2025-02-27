@@ -17,4 +17,5 @@ func (route *BookRoute) SetupBookRoute() {
 	bookRoute.Get("/list", route.BookHandler.GetBooks)
 	bookRoute.Get("/detail/:id", route.BookHandler.GetDetailBook)
 	bookRoute.Put("/update/:id", route.BookHandler.UpdateBook)
+	bookRoute.Delete("/delete/:id", route.BookHandler.DeleteBook)
 }

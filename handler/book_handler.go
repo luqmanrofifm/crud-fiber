@@ -84,3 +84,19 @@ func (handler *BookHandler) UpdateBook(c *fiber.Ctx) error {
 
 	return utils.SuccessResponse(c, "Book updated successfully")
 }
+
+func (handler *BookHandler) DeleteBook(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+
+	id, errParse := uuid.Parse(idStr)
+	if errParse != nil {
+		return utils.ErrorResponse(c, errParse)
+	}
+
+	_, err := handler.BookService.DeleteBook(id)
+	if err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	return utils.SuccessResponse(c, "Book deleted successfully")
+}
