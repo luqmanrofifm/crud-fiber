@@ -23,7 +23,7 @@ func (service *BookService) CreateBook(dto request.CreateBookDto) (*entity.Book,
 		Year:   dto.Year,
 	}
 
-	createdBook, err := service.BookRepository.Save(&book)
+	createdBook, err := service.BookRepository.Create(&book)
 	if err != nil {
 		return nil, err
 	}
@@ -55,4 +55,22 @@ func (service *BookService) GetDetailBook(id uuid.UUID) (*entity.Book, error) {
 	}
 
 	return book, nil
+}
+
+func (service *BookService) UpdateBook(id uuid.UUID, dto request.UpdateBookDto) (*entity.Book, error) {
+	book, err := service.BookRepository.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	book.Title = dto.Title
+	book.Author = dto.Author
+	book.Year = dto.Year
+
+	updatedBook, err := service.BookRepository.Update(book)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedBook, nil
 }

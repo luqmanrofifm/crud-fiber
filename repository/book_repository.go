@@ -14,7 +14,7 @@ func NewBookRepository(db *gorm.DB) *BookRepository {
 	return &BookRepository{db}
 }
 
-func (r *BookRepository) Save(book *entity.Book) (*entity.Book, error) {
+func (r *BookRepository) Create(book *entity.Book) (*entity.Book, error) {
 	err := r.db.Create(book).Error
 	if err != nil {
 		return nil, err
@@ -47,4 +47,12 @@ func (r *BookRepository) FindByID(id uuid.UUID) (*entity.Book, error) {
 		return nil, err
 	}
 	return &book, nil
+}
+
+func (r *BookRepository) Update(book *entity.Book) (*entity.Book, error) {
+	err := r.db.Save(book).Error
+	if err != nil {
+		return nil, err
+	}
+	return book, nil
 }

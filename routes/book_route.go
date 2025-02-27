@@ -16,4 +16,5 @@ func (route *BookRoute) SetupBookRoute() {
 	bookRoute.Post("/create", route.BookHandler.CreateBook)
 	bookRoute.Get("/list", route.BookHandler.GetBooks)
 	bookRoute.Get("/detail/:id", route.BookHandler.GetDetailBook)
+	bookRoute.Put("/update/:id", route.BookHandler.UpdateBook)
 }

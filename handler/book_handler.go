@@ -63,3 +63,24 @@ func (handler *BookHandler) GetDetailBook(c *fiber.Ctx) error {
 
 	return utils.SuccessResponse(c, book)
 }
+
+func (handler *BookHandler) UpdateBook(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+
+	id, errParse := uuid.Parse(idStr)
+	if errParse != nil {
+		return utils.ErrorResponse(c, errParse)
+	}
+
+	var payload request.UpdateBookDto
+	if err := c.BodyParser(&payload); err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	_, err := handler.BookService.UpdateBook(id, payload)
+	if err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	return utils.SuccessResponse(c, "Book updated successfully")
+}
