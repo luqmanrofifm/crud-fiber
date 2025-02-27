@@ -3,10 +3,15 @@ package apps
 import (
 	"crud_fiber.com/m/config"
 	"crud_fiber.com/m/config/database"
+	"crud_fiber.com/m/handler"
 	"crud_fiber.com/m/middleware"
+	"crud_fiber.com/m/repository"
+	"crud_fiber.com/m/routes"
+	"crud_fiber.com/m/service"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"gorm.io/gorm"
 )
 
 func StartApps() {
@@ -30,8 +35,22 @@ func StartApps() {
 	config.LoadEnv()
 	database.InitializeDatabase()
 
+	bookRoute := routes.BookRoute{
+		App:         app,
+		BookHandler: setUpBookHandler(database.GetInstanceDatabase()),
+	}
+
+	bookRoute.SetupBookRoute()
+
 	errApp := app.Listen(":8080")
 	if errApp != nil {
 		fmt.Println("Error when running the app")
 	}
+}
+
+func setUpBookHandler(db *gorm.DB) *handler.BookHandler {
+	bookRepository := repository.NewBookRepository(db)
+	bookService := service.NewBookService(bookRepository)
+	bookHandler := handler.NewBookHandler(bookService)
+	return bookHandler
 }

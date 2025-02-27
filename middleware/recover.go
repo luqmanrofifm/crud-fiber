@@ -21,8 +21,8 @@ func CustomRecoverMiddleware(c *fiber.Ctx) error {
 			log.Printf("Panic problem: %v", string(stackTrace))
 			c.Status(500).JSON(response.Error{
 				StatusCode: 500,
-				Message:    "Internal Server Error",
-				Error:      panicMessage,
+				Message:    panicMessage,
+				Error:      "Internal Server Error",
 				//Data:       string(stackTrace),
 			})
 		}
