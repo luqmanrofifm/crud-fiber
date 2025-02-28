@@ -13,7 +13,7 @@ type AuthRoute struct {
 func (app *AuthRoute) SetupAuthRoute() {
 	auth := app.App.Group("/api/v1/auth")
 
-	//auth.Post("/login", app.AuthHandler.Login)
+	auth.Post("/login", app.AuthHandler.Login)
 	auth.Post("/register", app.AuthHandler.Register)
 	//auth.Post("/logout", app.AuthHandler.Logout)
 	//auth.Post("/refresh", app.AuthHandler.Refresh)

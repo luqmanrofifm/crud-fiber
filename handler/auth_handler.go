@@ -34,3 +34,22 @@ func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 
 	return utils.SuccessResponse(c, "Register success")
 }
+
+func (handler *AuthHandler) Login(c *fiber.Ctx) error {
+	var payload request.LoginDto
+	if err := c.BodyParser(&payload); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(
+			response.Error{
+				StatusCode: fiber.StatusBadRequest,
+				Message:    "Failed to parse request",
+				Error:      err.Error(),
+			})
+	}
+
+	token, err := handler.AuthService.Login(payload)
+	if err != nil {
+		return utils.ErrorResponse(c, err)
+	}
+
+	return utils.SuccessResponse(c, token)
+}

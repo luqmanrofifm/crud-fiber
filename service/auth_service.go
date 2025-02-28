@@ -2,6 +2,7 @@ package service
 
 import (
 	"crud_fiber.com/m/dto/request"
+	"crud_fiber.com/m/dto/response"
 	"crud_fiber.com/m/entity"
 	"crud_fiber.com/m/repository"
 	"errors"
@@ -49,4 +50,33 @@ func (a *AuthService) validateDuplicateEmail(email string) error {
 	}
 
 	return nil
+}
+
+func (a *AuthService) Login(payload request.LoginDto) (*response.LoginResponse, error) {
+	user, err := a.UserRepository.FetchUserByEmail(payload.Email)
+	if err != nil {
+		//if err.Error() != "record not found" {
+		//	return nil, nil
+		//}
+		return nil, err
+	}
+
+	if !user.ComparePassword(payload.Password) {
+		return nil, errors.New("invalid password")
+	}
+
+	token, errToken := user.GenerateJwtToken()
+	if errToken != nil {
+		return nil, errToken
+	}
+
+	result := &response.LoginResponse{
+		Id:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+		Token: token,
+	}
+
+	return result, nil
+
 }

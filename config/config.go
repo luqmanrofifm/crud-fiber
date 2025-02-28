@@ -12,6 +12,7 @@ type AppConfig struct {
 	DbUserNamePsql string
 	DbPasswordPsql string
 	DbPsql         string
+	AuthSecretKey  string
 }
 
 func LoadEnv() {
@@ -29,5 +30,6 @@ func GetConfig() AppConfig {
 		DbUserNamePsql: os.Getenv("USERNAME_PSQL"),
 		DbPasswordPsql: os.Getenv("PASSWORD_PSQL"),
 		DbPsql:         os.Getenv("DB_PSQL"),
+		AuthSecretKey:  os.Getenv("AUTH_SECRET_KEY"),
 	}
 }
