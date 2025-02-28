@@ -42,6 +42,13 @@ func StartApps() {
 
 	bookRoute.SetupBookRoute()
 
+	authRoute := routes.AuthRoute{
+		App:         app,
+		AuthHandler: setUpAuthHandler(database.GetInstanceDatabase()),
+	}
+
+	authRoute.SetupAuthRoute()
+
 	errApp := app.Listen(":8080")
 	if errApp != nil {
 		fmt.Println("Error when running the app")
@@ -53,4 +60,11 @@ func setUpBookHandler(db *gorm.DB) *handler.BookHandler {
 	bookService := service.NewBookService(bookRepository)
 	bookHandler := handler.NewBookHandler(bookService)
 	return bookHandler
+}
+
+func setUpAuthHandler(db *gorm.DB) *handler.AuthHandler {
+	userRepository := repository.NewUserRepository(db)
+	authService := service.NewAuthService(userRepository)
+	authHandler := handler.NewAuthHandler(authService)
+	return authHandler
 }
