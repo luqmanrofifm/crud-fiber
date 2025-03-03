@@ -35,9 +35,12 @@ func StartApps() {
 	config.LoadEnv()
 	database.InitializeDatabase()
 
+	JwtValidation := middleware.NewJwtValidation(database.GetInstanceDatabase())
+
 	bookRoute := routes.BookRoute{
-		App:         app,
-		BookHandler: setUpBookHandler(database.GetInstanceDatabase()),
+		App:           app,
+		BookHandler:   setUpBookHandler(database.GetInstanceDatabase()),
+		JwtValidation: JwtValidation,
 	}
 
 	bookRoute.SetupBookRoute()

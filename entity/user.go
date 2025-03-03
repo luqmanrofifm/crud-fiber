@@ -2,11 +2,13 @@ package entity
 
 import (
 	"crud_fiber.com/m/config"
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -69,4 +71,47 @@ func (u *User) GenerateJwtToken() (string, error) {
 	}
 
 	return signedToken, nil
+}
+
+func (u *User) ValidateToken(bearerToken string) error {
+	isBearer := strings.HasPrefix(bearerToken, "Bearer")
+
+	if !isBearer {
+		return errors.New("invalid token")
+	}
+
+	splitToken := strings.Split(bearerToken, " ")
+
+	if len(splitToken) != 2 {
+		return errors.New("invalid token")
+	}
+
+	tokenString := splitToken[1]
+
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid token")
+		}
+		return []byte(config.GetConfig().AuthSecretKey), nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	var mapClaims jwt.MapClaims
+
+	if claims, ok := token.Claims.(jwt.MapClaims); !ok || !token.Valid {
+		return errors.New("invalid token")
+	} else {
+		mapClaims = claims
+	}
+
+	if _, ok := mapClaims["email"]; !ok {
+		return errors.New("invalid token")
+	}
+
+	u.Email = mapClaims["email"].(string)
+
+	return nil
 }

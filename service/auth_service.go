@@ -80,3 +80,24 @@ func (a *AuthService) Login(payload request.LoginDto) (*response.LoginResponse, 
 	return result, nil
 
 }
+
+//func (a *AuthService) Authentication(c *fiber.Ctx) error {
+//	token := c.Get("Authorization")
+//
+//	if token == "" {
+//		return errors.New("token not found")
+//	}
+//
+//	u := entity.User{}
+//	errValidateToken := u.ValidateToken(token)
+//	if errValidateToken != nil {
+//		return errValidateToken
+//	}
+//
+//	user, err := a.UserRepository.FetchUserByEmail(u.Email)
+//	if err != nil {
+//		return err
+//	}
+//
+//	c.Locals("user", user)
+//}
