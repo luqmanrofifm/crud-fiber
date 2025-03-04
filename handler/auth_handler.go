@@ -2,7 +2,7 @@ package handler
 
 import (
 	"crud_fiber.com/m/dto/request"
-	"crud_fiber.com/m/dto/response"
+	"crud_fiber.com/m/pkg/errs"
 	"crud_fiber.com/m/service"
 	"crud_fiber.com/m/utils"
 	"github.com/gofiber/fiber/v2"
@@ -19,12 +19,9 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 	var payload request.RegisterDto
 	if err := c.BodyParser(&payload); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(
-			response.Error{
-				StatusCode: fiber.StatusBadRequest,
-				Message:    "Failed to parse request",
-				Error:      err.Error(),
-			})
+		return utils.ErrorResponse(c, &errs.BadRequestError{
+			Err: err.Error(),
+		})
 	}
 
 	err := handler.AuthService.Register(payload)
@@ -38,12 +35,9 @@ func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 func (handler *AuthHandler) Login(c *fiber.Ctx) error {
 	var payload request.LoginDto
 	if err := c.BodyParser(&payload); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(
-			response.Error{
-				StatusCode: fiber.StatusBadRequest,
-				Message:    "Failed to parse request",
-				Error:      err.Error(),
-			})
+		return utils.ErrorResponse(c, &errs.BadRequestError{
+			Err: err.Error(),
+		})
 	}
 
 	token, err := handler.AuthService.Login(payload)

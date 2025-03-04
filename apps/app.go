@@ -8,10 +8,10 @@ import (
 	"crud_fiber.com/m/repository"
 	"crud_fiber.com/m/routes"
 	"crud_fiber.com/m/service"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"gorm.io/gorm"
+	"log"
 )
 
 func StartApps() {
@@ -54,7 +54,7 @@ func StartApps() {
 
 	errApp := app.Listen(":8080")
 	if errApp != nil {
-		fmt.Println("Error when running the app")
+		log.Println("Error when running the app")
 	}
 }
 

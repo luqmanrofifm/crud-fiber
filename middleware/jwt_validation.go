@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"crud_fiber.com/m/entity"
+	"crud_fiber.com/m/pkg/errs"
 	"crud_fiber.com/m/utils"
-	"errors"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -20,7 +20,9 @@ func (j *JwtValidation) ValidateToken(c *fiber.Ctx) error {
 	token := c.Get("Authorization")
 
 	if token == "" {
-		return utils.ErrorResponse(c, errors.New("Invalid Token"))
+		return utils.ErrorResponse(c, &errs.UnauthorizedError{
+			Err: "Token Invalid",
+		})
 	}
 
 	u := entity.User{}

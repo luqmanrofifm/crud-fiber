@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"log"
+	"net/http"
 	"runtime/debug"
 	"time"
 )
@@ -19,10 +20,11 @@ func CustomRecoverMiddleware(c *fiber.Ctx) error {
 			// trace detail error go runtime
 			stackTrace := debug.Stack()
 			log.Printf("Panic problem: %v", string(stackTrace))
-			c.Status(500).JSON(response.Error{
-				StatusCode: 500,
+
+			c.Status(http.StatusInternalServerError).JSON(response.Error{
+				StatusCode: http.StatusInternalServerError,
+				Error:      "INTERNAL_SERVER_ERROR",
 				Message:    panicMessage,
-				Error:      "Internal Server Error",
 				//Data:       string(stackTrace),
 			})
 		}

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"crud_fiber.com/m/dto/request"
-	"crud_fiber.com/m/dto/response"
+	"crud_fiber.com/m/pkg/errs"
 	"crud_fiber.com/m/service"
 	"crud_fiber.com/m/utils"
 	"github.com/gofiber/fiber/v2"
@@ -20,12 +20,9 @@ func NewBookHandler(bookService *service.BookService) *BookHandler {
 func (handler *BookHandler) CreateBook(c *fiber.Ctx) error {
 	var payload request.CreateBookDto
 	if err := c.BodyParser(&payload); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(
-			response.Error{
-				StatusCode: fiber.StatusBadRequest,
-				Message:    "Failed to parse request",
-				Error:      err.Error(),
-			})
+		return utils.ErrorResponse(c, &errs.BadRequestError{
+			Err: err.Error(),
+		})
 	}
 
 	_, err := handler.BookService.CreateBook(payload)
@@ -74,7 +71,9 @@ func (handler *BookHandler) UpdateBook(c *fiber.Ctx) error {
 
 	var payload request.UpdateBookDto
 	if err := c.BodyParser(&payload); err != nil {
-		return utils.ErrorResponse(c, err)
+		return utils.ErrorResponse(c, &errs.BadRequestError{
+			Err: err.Error(),
+		})
 	}
 
 	_, err := handler.BookService.UpdateBook(id, payload)
