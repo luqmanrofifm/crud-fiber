@@ -33,6 +33,14 @@ func (handler *BookHandler) CreateBook(c *fiber.Ctx) error {
 	return utils.SuccessResponse(c, "Book created successfully")
 }
 
+// GetBooks @Summary Get all books
+// @Description Get a list of books
+// @Tags Books
+// @Security OAuth2Password
+// @Accept json
+// @Produce json
+// @Success 200 {object} documentation.ListBookResponse
+// @Router /api/v1/book/list [get]
 func (handler *BookHandler) GetBooks(c *fiber.Ctx) error {
 	page := c.QueryInt("page", 1)
 	limit := c.QueryInt("limit", 10)

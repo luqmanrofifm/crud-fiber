@@ -1,7 +1,175 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Dokumentasi API CRUD menggunakan go fiber",
+        "title": "CRUD Fiber API",
+        "contact": {},
+        "version": "1.0"
     },
-    "paths": {}
+    "paths": {
+        "/api/v1/auth/token": {
+            "post": {
+                "description": "Mendapatkan token OAuth dengan username \u0026 password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "parameters": [
+                    {
+                        "description": "OAuth Credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.OAuthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.OAuthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/book/list": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Password": []
+                    }
+                ],
+                "description": "Get a list of books",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Books"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/documentation.ListBookResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "documentation.ListBookResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/documentation.PageListBook"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status_code": {
+                    "type": "integer"
+                }
+            }
+        },
+        "documentation.PageListBook": {
+            "type": "object",
+            "properties": {
+                "current_page": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Book"
+                    }
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total_page": {
+                    "type": "integer"
+                },
+                "total_record": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entity.Book": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.OAuthRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.OAuthResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "OAuth2Password": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "http://localhost:8080/api/v1/auth/token"
+        }
+    }
 }

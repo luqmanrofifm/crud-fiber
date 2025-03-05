@@ -3,7 +3,6 @@ package apps
 import (
 	"crud_fiber.com/m/config"
 	"crud_fiber.com/m/config/database"
-	_ "crud_fiber.com/m/docs"
 	"crud_fiber.com/m/handler"
 	"crud_fiber.com/m/middleware"
 	"crud_fiber.com/m/repository"
@@ -16,11 +15,6 @@ import (
 	"log"
 )
 
-// @title CRUD Fiber API
-// @version 1.0
-// @description Dokumentasi API CRUD menggunakan go fiber
-// @host localhost:8080
-// @BasePath /api/v1
 func StartApps() {
 	app := fiber.New(fiber.Config{
 		BodyLimit: 100 * 1024 * 1024,

@@ -1,4 +1,112 @@
+definitions:
+  documentation.ListBookResponse:
+    properties:
+      data:
+        $ref: '#/definitions/documentation.PageListBook'
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  documentation.PageListBook:
+    properties:
+      current_page:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/entity.Book'
+        type: array
+      page_size:
+        type: integer
+      total_page:
+        type: integer
+      total_record:
+        type: integer
+    type: object
+  entity.Book:
+    properties:
+      author:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+      year:
+        type: integer
+    type: object
+  request.OAuthRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  response.OAuthResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      token_type:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+  description: Dokumentasi API CRUD menggunakan go fiber
+  title: CRUD Fiber API
+  version: "1.0"
+paths:
+  /api/v1/auth/token:
+    post:
+      consumes:
+      - application/json
+      description: Mendapatkan token OAuth dengan username & password
+      parameters:
+      - description: OAuth Credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.OAuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.OAuthResponse'
+      tags:
+      - Auth
+  /api/v1/book/list:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/documentation.ListBookResponse'
+      security:
+      - OAuth2Password: []
+      tags:
+      - Books
+securityDefinitions:
+  OAuth2Password:
+    flow: password
+    tokenUrl: http://localhost:8080/api/v1/auth/token
+    type: oauth2
 swagger: "2.0"

@@ -15,6 +15,7 @@ func (app *AuthRoute) SetupAuthRoute() {
 
 	auth.Post("/login", app.AuthHandler.Login)
 	auth.Post("/register", app.AuthHandler.Register)
+	auth.Post("/token", app.AuthHandler.GetOAuthToken)
 	//auth.Post("/logout", app.AuthHandler.Logout)
 	//auth.Post("/refresh", app.AuthHandler.Refresh)
 	//auth.Get("/profile", app.AuthHandler.Profile)
