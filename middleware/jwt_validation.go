@@ -45,6 +45,10 @@ func (j *JwtValidation) FetchUserByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	err := j.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
+		if err.Error() == "record not found" {
+			return nil, &errs.ResourceNotFoundError{Err: "User Does Not Exist"}
+		}
+
 		return nil, err
 	}
 

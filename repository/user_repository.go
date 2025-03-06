@@ -2,6 +2,7 @@ package repository
 
 import (
 	"crud_fiber.com/m/entity"
+	"crud_fiber.com/m/pkg/errs"
 	"gorm.io/gorm"
 )
 
@@ -16,6 +17,9 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 func (r *UserRepository) FetchUserByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	if err := r.db.Where("email = ?", email).First(&user).Error; err != nil {
+		if err.Error() == "record not found" {
+			return nil, &errs.ResourceNotFoundError{Err: "User Not Found"}
+		}
 		return nil, err
 	}
 

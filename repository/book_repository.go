@@ -2,6 +2,7 @@ package repository
 
 import (
 	"crud_fiber.com/m/entity"
+	"crud_fiber.com/m/pkg/errs"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -44,6 +45,9 @@ func (r *BookRepository) FindByID(id uuid.UUID) (*entity.Book, error) {
 	var book entity.Book
 	err := r.db.Where("id = ?", id).First(&book).Error
 	if err != nil {
+		if err.Error() == "record not found" {
+			return nil, &errs.ResourceNotFoundError{Err: "Data Not Found"}
+		}
 		return nil, err
 	}
 	return &book, nil
