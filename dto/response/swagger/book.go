@@ -1,4 +1,4 @@
-package documentation
+package swagger
 
 import "crud_fiber.com/m/entity"
 
@@ -14,4 +14,10 @@ type PageListBook struct {
 	TotalPage   int64         `json:"total_page"`
 	TotalRecord int64         `json:"total_record"`
 	Data        []entity.Book `json:"data"`
+}
+
+type DetailBookResponse struct {
+	StatusCode int         `json:"status_code"`
+	Message    string      `json:"message"`
+	Data       entity.Book `json:"data"`
 }

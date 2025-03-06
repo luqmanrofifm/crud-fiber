@@ -1,28 +1,4 @@
 definitions:
-  documentation.ListBookResponse:
-    properties:
-      data:
-        $ref: '#/definitions/documentation.PageListBook'
-      message:
-        type: string
-      status_code:
-        type: integer
-    type: object
-  documentation.PageListBook:
-    properties:
-      current_page:
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/entity.Book'
-        type: array
-      page_size:
-        type: integer
-      total_page:
-        type: integer
-      total_record:
-        type: integer
-    type: object
   entity.Book:
     properties:
       author:
@@ -42,6 +18,29 @@ definitions:
       year:
         type: integer
     type: object
+  request.CreateBookDto:
+    properties:
+      author:
+        type: string
+      title:
+        type: string
+      year:
+        type: integer
+    required:
+    - author
+    - title
+    - year
+    type: object
+  request.LoginDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   request.OAuthRequest:
     properties:
       password:
@@ -52,6 +51,32 @@ definitions:
     - password
     - username
     type: object
+  request.RegisterDto:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  request.UpdateBookDto:
+    properties:
+      author:
+        type: string
+      title:
+        type: string
+      year:
+        type: integer
+    required:
+    - author
+    - title
+    - year
+    type: object
   response.OAuthResponse:
     properties:
       access_token:
@@ -61,12 +86,107 @@ definitions:
       token_type:
         type: string
     type: object
+  swagger.DetailBookResponse:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Book'
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  swagger.ListBookResponse:
+    properties:
+      data:
+        $ref: '#/definitions/swagger.PageListBook'
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  swagger.LoginResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      token:
+        type: string
+    type: object
+  swagger.PageListBook:
+    properties:
+      current_page:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/entity.Book'
+        type: array
+      page_size:
+        type: integer
+      total_page:
+        type: integer
+      total_record:
+        type: integer
+    type: object
+  swagger.SuccessResponse:
+    properties:
+      data:
+        type: string
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
 info:
   contact: {}
   description: Dokumentasi API CRUD menggunakan go fiber
   title: CRUD Fiber API
   version: "1.0"
 paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email & password
+      parameters:
+      - description: Login data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.LoginResponse'
+      tags:
+      - Auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register user
+      parameters:
+      - description: Register data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/request.RegisterDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.SuccessResponse'
+      tags:
+      - Auth
   /api/v1/auth/token:
     post:
       consumes:
@@ -88,6 +208,73 @@ paths:
             $ref: '#/definitions/response.OAuthResponse'
       tags:
       - Auth
+  /api/v1/book/create:
+    post:
+      consumes:
+      - application/json
+      description: Add a new book to the database
+      parameters:
+      - description: Book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateBookDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.SuccessResponse'
+      security:
+      - OAuth2Password: []
+      tags:
+      - Books
+  /api/v1/book/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a book from the database
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.SuccessResponse'
+      security:
+      - OAuth2Password: []
+      tags:
+      - Books
+  /api/v1/book/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detail of book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.DetailBookResponse'
+      security:
+      - OAuth2Password: []
+      tags:
+      - Books
   /api/v1/book/list:
     get:
       consumes:
@@ -99,7 +286,35 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/documentation.ListBookResponse'
+            $ref: '#/definitions/swagger.ListBookResponse'
+      security:
+      - OAuth2Password: []
+      tags:
+      - Books
+  /api/v1/book/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update data of a book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Book data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateBookDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.SuccessResponse'
       security:
       - OAuth2Password: []
       tags:

@@ -17,6 +17,14 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 	return &AuthHandler{AuthService: authService}
 }
 
+// Register @Summary Login
+// @Description Register user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param payload body request.RegisterDto true "Register data"
+// @Success 200 {object} swagger.SuccessResponse
+// @Router /api/v1/auth/register [post]
 func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 	var payload request.RegisterDto
 	if err := c.BodyParser(&payload); err != nil {
@@ -33,6 +41,14 @@ func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 	return utils.SuccessResponse(c, "Register success")
 }
 
+// Login @Summary Login
+// @Description Login with email & password
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param payload body request.LoginDto true "Login data"
+// @Success 200 {object} swagger.LoginResponse
+// @Router /api/v1/auth/login [post]
 func (handler *AuthHandler) Login(c *fiber.Ctx) error {
 	var payload request.LoginDto
 	if err := c.BodyParser(&payload); err != nil {
