@@ -34,6 +34,10 @@ func (handler *BookHandler) CreateBook(c *fiber.Ctx) error {
 		})
 	}
 
+	if errValidate := utils.Validate(payload); errValidate != nil {
+		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
+	}
+
 	_, err := handler.BookService.CreateBook(payload)
 	if err != nil {
 		return utils.ErrorResponse(c, err)
@@ -110,6 +114,10 @@ func (handler *BookHandler) UpdateBook(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, &errs.BadRequestError{
 			Err: err.Error(),
 		})
+	}
+
+	if errValidate := utils.Validate(payload); errValidate != nil {
+		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
 	}
 
 	_, err := handler.BookService.UpdateBook(id, payload)

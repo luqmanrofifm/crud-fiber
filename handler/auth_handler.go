@@ -33,6 +33,10 @@ func (handler *AuthHandler) Register(c *fiber.Ctx) error {
 		})
 	}
 
+	if errValidate := utils.Validate(payload); errValidate != nil {
+		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
+	}
+
 	err := handler.AuthService.Register(payload)
 	if err != nil {
 		return utils.ErrorResponse(c, err)
@@ -55,6 +59,10 @@ func (handler *AuthHandler) Login(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, &errs.BadRequestError{
 			Err: err.Error(),
 		})
+	}
+
+	if errValidate := utils.Validate(payload); errValidate != nil {
+		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
 	}
 
 	token, err := handler.AuthService.Login(payload)
