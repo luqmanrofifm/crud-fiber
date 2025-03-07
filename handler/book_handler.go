@@ -2,6 +2,7 @@ package handler
 
 import (
 	"crud_fiber.com/m/dto/request"
+	"crud_fiber.com/m/entity"
 	"crud_fiber.com/m/pkg/errs"
 	"crud_fiber.com/m/service"
 	"crud_fiber.com/m/utils"
@@ -38,7 +39,9 @@ func (handler *BookHandler) CreateBook(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
 	}
 
-	_, err := handler.BookService.CreateBook(payload)
+	user := c.Locals("user").(*entity.User)
+
+	_, err := handler.BookService.CreateBook(payload, user)
 	if err != nil {
 		return utils.ErrorResponse(c, err)
 	}
@@ -120,7 +123,9 @@ func (handler *BookHandler) UpdateBook(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, &errs.BadRequestError{Err: errValidate.Error()})
 	}
 
-	_, err := handler.BookService.UpdateBook(id, payload)
+	user := c.Locals("user").(*entity.User)
+
+	_, err := handler.BookService.UpdateBook(id, payload, user)
 	if err != nil {
 		return utils.ErrorResponse(c, err)
 	}
