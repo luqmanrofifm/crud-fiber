@@ -3,6 +3,7 @@ package utils
 import (
 	"crud_fiber.com/m/dto/response"
 	"crud_fiber.com/m/pkg/errs"
+	"crud_fiber.com/m/pkg/logging"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -26,7 +27,8 @@ func ErrorResponse(c *fiber.Ctx, err error) error {
 	var unauthorizedError *errs.UnauthorizedError
 
 	stackTrace := debug.Stack()
-	log.Printf("error: %v", string(stackTrace))
+
+	logging.Log.Error(err.Error())
 
 	if errors.As(err, &badRequestError) {
 		return c.Status(http.StatusBadRequest).JSON(response.Error{
@@ -47,6 +49,7 @@ func ErrorResponse(c *fiber.Ctx, err error) error {
 			Message:    err.Error(),
 		})
 	} else {
+		log.Printf("error: %v", string(stackTrace))
 		return c.Status(http.StatusInternalServerError).JSON(response.Error{
 			StatusCode: http.StatusInternalServerError,
 			Error:      "INTERNAL_SERVER_ERROR",

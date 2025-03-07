@@ -5,6 +5,7 @@ import (
 	"crud_fiber.com/m/config/database"
 	"crud_fiber.com/m/handler"
 	"crud_fiber.com/m/middleware"
+	"crud_fiber.com/m/pkg/logging"
 	"crud_fiber.com/m/repository"
 	"crud_fiber.com/m/routes"
 	"crud_fiber.com/m/service"
@@ -16,6 +17,8 @@ import (
 )
 
 func StartApps() {
+	logging.InitLogger()
+
 	app := fiber.New(fiber.Config{
 		BodyLimit: 100 * 1024 * 1024,
 	})
